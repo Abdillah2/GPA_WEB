@@ -15,7 +15,7 @@ use App\Http\Controllers\RewardController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardNewsController;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\News ;
@@ -82,13 +82,23 @@ Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
     });
 
 
-    Route::get('/login', [LoginController::class, 'index']);
+    Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
     Route::post('/login', [LoginController::class, 'authenticate']);
+    Route::post('/logout', [LoginController::class, 'logout']);
 
-    Route::get('/register', [RegisterController::class, 'index']);
+    Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
     Route::post('/register', [RegisterController::class, 'store']);
 
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', function(){
+        return view('dashboard.index',[
+            "page" => "index",
+        ]);
+    })->middleware('auth');
+
+    Route::get('/dashboard/news/checkSlug',[DashboardNewsController::class,'checkSlug'])->middleware('auth');
+
+    Route::resource('dashboard/news', DashboardNewsController::class)->middleware('auth');
+
     // Route::get('/authors/{author:username}', function(User $author){
         //     return view('about.news',[
     //         "page" => "news",

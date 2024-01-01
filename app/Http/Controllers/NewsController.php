@@ -32,7 +32,7 @@ class NewsController extends Controller
 
             "page" => "news",
             "title" => "All News" . $title,
-            "news" => News::latest()->filter(request(['search','category', 'author']))->paginate(20)->withQueryString()
+            "news" => News::latest()->filter(request(['search','category', 'author']))->paginate(7)->withQueryString()
 
         ]);
     }

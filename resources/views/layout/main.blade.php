@@ -98,6 +98,9 @@
                         </ul>
                     </li>
 
+                    <li><a class="nav-link scrollto {{ $page == 'Login' ? 'active' : '' }}"
+                        href="{{ url('/login') }}">Login</a></li>
+
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>

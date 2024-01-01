@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class News extends Model
 {
-    use HasFactory;
+    use HasFactory, Sluggable;
     // protected $fillable = ['title','excerpt','body'];
     Protected $guarded = ['id'];
     protected $with = ['category', 'author'];
@@ -59,4 +60,17 @@ class News extends Model
         {
             return $this->belongsTo(User::class, 'user_id');
         }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
 }

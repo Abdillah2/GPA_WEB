@@ -22,11 +22,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-            // User::create([
-            //     'name' => 'Didi Siswandi',
-            //     'email' => 'didisiswandi@gmail.com',
-            //     'password' => bcrypt('12345')
-            // ]);
+            User::create([
+                'name' => 'Didi Siswandi',
+                'username'=>'didisiswandi',
+                'email' => 'didisiswandi@gmail.com',
+                'password' => bcrypt('12345')
+            ]);
             // User::create([
             //     'name' => 'Abdul Rachim',
             //     'email' => 'dul@gmail.com',

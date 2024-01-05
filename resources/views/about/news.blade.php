@@ -20,8 +20,14 @@
     </div>
 
     <div class="card mb-3">
+        @if($news[0]->image)
+            <div style="max-height:350px; overflow:hidden;">
+                <img src="{{ asset('storage/' . $news[0]->image) }}" alt="{{ $news[0]->category->name }}" class="img-fluid">
+            </div>
+                @else
+                <img src="https://source.unsplash.com/category/{{ $news[0]->category->name }}/1200x400" class="card-img-top" alt="{{ $news[0]->category->name }}">
+                @endif
         @if ($news->count())
-        <img src="https://source.unsplash.com/category/{{ $news[0]->category->name }}/1200x400" class="card-img-top" alt="{{ $news[0]->category->name }}">
         <div class="card-body text-center">
           <h4 class="card-title "><a href="/news/{{ $news[0]->slug }}" class="text-dark">{{ $news[0]->title }}</a></h4>
           <p>
@@ -32,12 +38,19 @@
       </div>
 
 
+
+
       <div class="container ">
         <div class="row">
             @foreach ($news->skip(1) as $post )
             <div class="col-md-4 mb-4">
                 <div class="position-absolute px-2 py-1 text-white" style="background-color: rgba(0, 0, 0, 0.9)"><a href="/news?category={{ $post->category->slug }}" class="text-white">{{ $post->category->name }}</a></div>
-                    <img src="https://source.unsplash.com/category/{{ $post->category->name }}/700x300" class="card-img-top" alt="{{ $post->category->name }}">
+
+                @if($post->image)
+                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->category->name }}" class="img-fluid">
+                    @else
+                        <img src="https://source.unsplash.com/category/{{ $post->category->name }}/1200x400" alt="{{ $post->category->name }}" class="img-fluid">
+                    @endif
                     <div class="card-body">
                       <h4 class="card-title text-"><a href="/news/{{ $post->slug }}" class="text-dark">{{ $post->title }}</a></h4>
                       <p>

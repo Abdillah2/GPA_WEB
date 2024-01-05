@@ -15,9 +15,10 @@ class LoginController extends Controller
         ]);
     }
 
+    // kalo mau ketat email:dns
     public function authenticate(Request $request){
        $credential = $request->validate([
-            'email'=>'required|email:dns',
+            'email'=>'required|email',
             'password' => 'required'
         ]);
 

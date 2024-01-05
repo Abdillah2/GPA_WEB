@@ -10,6 +10,7 @@ use App\Http\Controllers\CareerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HseController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\RecentProjectController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\NewsController;
@@ -98,6 +99,7 @@ Route::get('/reward', [RewardController::class, 'index'])->name('reward.index');
     Route::get('/dashboard/news/checkSlug',[DashboardNewsController::class,'checkSlug'])->middleware('auth');
 
     Route::resource('dashboard/news', DashboardNewsController::class)->middleware('auth');
+    Route::resource('dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
 
     // Route::get('/authors/{author:username}', function(User $author){
         //     return view('about.news',[

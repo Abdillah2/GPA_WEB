@@ -6,6 +6,8 @@ use App\Models\News;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardNewsController extends Controller
 {
@@ -34,12 +36,24 @@ class DashboardNewsController extends Controller
      */
     public function store(Request $request)
     {
-        return $validateData = $request->validate([
+
+        $validateData = $request->validate([
             'title'=> 'required|max:255',
             'slug' =>'required|unique:news',
             'category_id' => 'required',
+            'image' => 'image|file|max:1024',
             'body' => 'required'
         ]);
+        if($request->file('image')){
+            $validateData['image'] = $request->file('image')->store('post-image');
+        }
+
+        $validateData['user_id'] = auth()->id();
+        $validateData['excerpt'] = Str::limit(strip_tags($request->body), 200);
+
+        News::create($validateData);
+
+        return redirect('/dashboard/news')->with('success', 'New post has been added!');
     }
 
     /**
@@ -57,7 +71,10 @@ class DashboardNewsController extends Controller
      */
     public function edit(News $news)
     {
-        //
+        return view ('dashboard.news.edit',[
+            'news' => $news,
+            'categories' => Category::all()
+        ]);
     }
 
     /**
@@ -65,7 +82,32 @@ class DashboardNewsController extends Controller
      */
     public function update(Request $request, News $news)
     {
-        //
+        $rules =[
+            'title'=> 'required|max:255',
+            'category_id' => 'required',
+            'image' => 'image|file|max:1024',
+            'body' => 'required'
+        ];
+
+        if($request->slug != $news->slug){
+            $rules['slug'] = 'required|unique:news';
+        }
+
+        $validatedData = $request->validate($rules);
+
+        if($request->file('image')){
+            if($request->oldImage){
+                Storage::delete($request->oldImage);
+            }
+            $validatedData['image'] = $request->file('image')->store('post-image');
+        }
+
+        $validatedData['user_id'] = auth()->id();
+        $validatedData['excerpt'] = Str::limit(strip_tags($request->body), 200);
+
+        News::where('id', $news->id)->update($validatedData);
+
+        return redirect('/dashboard/news')->with('success', 'Post has been updated!');
     }
 
     /**
@@ -73,7 +115,12 @@ class DashboardNewsController extends Controller
      */
     public function destroy(News $news)
     {
-        //
+
+        if($news->image){
+            Storage::delete($news->image);
+        }
+        News::destroy($news->id);
+        return redirect('/dashboard/news')->with('success', 'News has been deleted');
     }
 
     public function checkSlug(Request $request){
